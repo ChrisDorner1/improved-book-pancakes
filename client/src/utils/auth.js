@@ -2,7 +2,7 @@
 import decode from 'jwt-decode';
 
 // create a new class to instantiate for a user
-class AuthService {
+ class AuthService {
   // get user data
   getProfile() {
     return decode(this.getToken());
