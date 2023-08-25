@@ -47,3 +47,7 @@ import decode from 'jwt-decode';
 }
 
 export default new AuthService();
+
+// const Auth = new AuthService()
+
+// export default Auth
