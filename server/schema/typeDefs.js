@@ -42,4 +42,4 @@ type Mutation {
     saveBook(bookData: bookInput!): User
 }`
 
-export default typeDefs
+module.exports = {typeDefs}

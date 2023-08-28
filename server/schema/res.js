@@ -48,4 +48,4 @@ const res = {
     }
 }
 
-export default res
+module.exports = {res}
