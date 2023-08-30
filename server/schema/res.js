@@ -8,7 +8,7 @@ const res = {
     Query: {
         me: async (parent, args, context) => {
             if (context.user) {
-                const data = await User.findOne({_id: context.user._id}).select('-__v - password')
+                const data = await User.findOne({_id: context.user._id}).select('-__v - password').populate('savedBooks')
                 console.log(data)
                 return data
             }
@@ -44,12 +44,24 @@ const res = {
             if (context.user) {
                 const updootUser = await User.findOneAndUpdate(
                     {_id: context.user._id},
-                    {$pull: {savedBooks: bookId} },
+                    {$pull: {savedBooks: bookId} }, //$addToSet ?
                     {new: true}
                 )
                 return updootUser
             }
             throw new AuthenticationError('log in first')
+        },
+
+        deleteBook: async (parent, {bookId},context) => {
+            if (context.user) {
+                const updootUser = await User.findOneAndUpdate(
+                    {_id: context.user._id},
+                    { $pull: {savedBooks: {bookId}}},
+                    {new: true}
+                )
+                return updootUser
+            }
+            throw new AuthenticationError("login first")
         }
     }
 }
