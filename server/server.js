@@ -2,12 +2,10 @@ const express = require('express');
 const path = require('path');
 const db = require('./config/connection');
 // const routes = require('./routes');
-// import auth
 const authMiddleware = require("./utils/auth")
 const {ApolloServer} = require("apollo-server-express")
-// const {typeDef, res} = require('./schema/index')
-const typeDef = require('./schema/typeDefs')
-const {res} = require('./schema/res')
+const {typeDefs, res} = require('./schema')
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -16,8 +14,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const serve = new ApolloServer({
+  typeDefs,
   res,
-  typeDef,
   context: authMiddleware
 })
 
@@ -27,10 +25,14 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 }
 
-const start = async (typeDef, resolvers) => {
+
+// app.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../client/build/index.html'))
+// })
+
+const startSever = async (typeDefs, res) => {
   await serve.start()
   serve.applyMiddleware({app})
-
 
 // app.use(routes);
 
@@ -38,5 +40,5 @@ db.once('open', () => {
   app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
 });
 }
-
-start(typeDef, res)
+console.log()
+startSever(typeDefs, res)

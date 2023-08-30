@@ -1,18 +1,23 @@
-const {authError} = require('apollo-server-express')
+const {AuthenticationError} = require('apollo-server-express')
 
 const {User} = require("../models/User")
 
-const {Token} = require("../utils/auth")
-const auth = require('../utils/auth')
+const {signToken} = require('../utils/auth')
 
 const res = {
     Query: {
         me: async (parent, args, context) => {
-            if (context.User) {
+            if (context.user) {
                 const data = await User.findOne({_id: context.user._id}).select('-__v - password')
+                console.log(data)
                 return data
             }
-            throw new authError("you must be signed in")
+            throw new AuthenticationError("you must be signed in")
+        },
+        Users: async() => {
+            const users = await User.find()
+            console.log(users)
+            return users
         }
     },
 
@@ -20,18 +25,19 @@ const res = {
         login: async (parent, {email, password}) => {
             const user = await User.findOne({email}) 
             if (!user) {
-                throw new authError('WRONG')
+                throw new AuthenticationError('WRONG')
             }
             const pass = await user.isCorrectPassword(password)
             if (!pass) {
-                throw new authError('No')
+                throw new AuthenticationError('No')
             }
-            const token = Token(user)
+            const token = signToken(user)
             return (token, user)
         },
         addUser: async (parent, args) => {
+            console.log("test")
             const user = await User.create(args)
-            const token = Token(user)
+            const token = signToken(user)
             return { token, user }
         },
         addBook: async (parent, {bookData}, context) => {
@@ -43,9 +49,9 @@ const res = {
                 )
                 return updootUser
             }
-            throw new authError('log in first')
+            throw new AuthenticationError('log in first')
         }
     }
 }
 
-module.exports = {res}
+module.exports = res
