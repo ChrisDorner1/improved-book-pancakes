@@ -6,7 +6,7 @@ type User {
     _id: ID!
     username: String!
     email: String!
-    bookNum: Int
+    bookCount: Int
     savedBooks: [Book]
 }
 
@@ -17,7 +17,7 @@ type Auth {
 
 type Book {
     bookId: String!
-    author: [String]
+    authors: [String]
     description: String
     title: String!
     image: String
