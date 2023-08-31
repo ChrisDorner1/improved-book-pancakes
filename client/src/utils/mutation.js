@@ -41,11 +41,11 @@ mutation login($email: String!, $password: String!) {
 }`
 
 export const REMOVE_BOOK = gql `
-mutatoin Mutation($bookId: String!) {
-    removeBook(bookId: $bookId) {
+mutation Mutation($bookId: String!) 
+    deleteBook(bookId: $bookId) {
         _id
-        username
         email
+        username
         bookCount
         savedBooks {
             bookId
@@ -56,4 +56,4 @@ mutatoin Mutation($bookId: String!) {
             link
         }
     }
-}`
+`
