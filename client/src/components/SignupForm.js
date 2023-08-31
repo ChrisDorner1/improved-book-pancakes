@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { ADD_USER } from '../utils/mutation';
 import { useMutation } from '@apollo/client';
+import auth from '../utils/auth';
 
 const SignupForm = () => {
   // set initial form state
@@ -19,17 +20,24 @@ const SignupForm = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-console.log("userFormData", userFormData)
-    // check if form has everything (as per react-bootstrap docs)
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
+    try { const {data } = await addUser({
+      variables: {...userFormData}
+    })
+  auth.login(data.addUser.token)} catch (err) {
+    console.error(err)
+  }
     }
+// console.log("userFormData", userFormData)
+    // check if form has everything (as per react-bootstrap docs)
+    // const form = event.currentTarget;
+    // if (form.checkValidity() === false) {
+    //   event.preventDefault();
+    //   event.stopPropagation();
+  
 
-    try {
-      const response = await addUser({variables: {...userFormData}});
-      console.log("response", response)
+    // try {
+      // const response = await addUser({variables: {...userFormData}});
+      // console.log("response", response)
 
       // if (!response.ok) {
       //   throw new Error('something went wrong!');
@@ -38,17 +46,17 @@ console.log("userFormData", userFormData)
       // const { token, user } = await response.json();
       // console.log(user);
       // Auth.login(token);
-    } catch (err) {
-      console.error(err);
-      setShowAlert(true);
-    }
+  //   } catch (err) {
+  //     console.error(err);
+  //     setShowAlert(true);
+  //   }
 
-    setUserFormData({
-      username: '',
-      email: '',
-      password: '',
-    });
-  };
+  //   setUserFormData({
+  //     username: '',
+  //     email: '',
+  //     password: '',
+  //   });
+  // };
 
   return (
     <>

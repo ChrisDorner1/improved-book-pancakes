@@ -1,5 +1,11 @@
 //add save button
+
 import React, { useState, useEffect } from 'react';
+
+import { SAVE_BOOK } from '../utils/mutation';
+import { useMutation } from '@apollo/client';
+import { GET_ME } from '../utils/query';
+
 import {
   Container,
   Col,
@@ -10,7 +16,7 @@ import {
 } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
-import { saveBook, searchGoogleBooks } from '../utils/API';
+import { searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 
 const SearchBooks = () => {
@@ -21,6 +27,26 @@ const SearchBooks = () => {
 
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
+
+  const [saveBook] = useMutation(SAVE_BOOK, {
+    update(cache, { data: {saveBook}}) { try{
+      const {me} = cache.readQuery({
+        query: GET_ME
+      })
+      cache.writeQuery({
+        query: GET_ME,
+        data: {
+          me: {
+            ...me,
+            savedBooks: [
+              ...me.savedBooks,
+              saveBook.savedBoods[saveBook.savedbooks.length -1]
+            ]
+          }
+        }
+      })
+    }catch (error) {}} 
+  })
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
@@ -141,6 +167,9 @@ const SearchBooks = () => {
                           : 'Save this Book!'}
                       </Button>
                     )}
+                    <br/> <a target='_blank' ref="noreferrer noopener" id='link' href={book.link}>
+                      {book.link == null ? "no link" : "google"}
+                    </a>
                   </Card.Body>
                 </Card>
               </Col>
