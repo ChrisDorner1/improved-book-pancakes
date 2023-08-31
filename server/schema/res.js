@@ -6,14 +6,14 @@ const {signToken} = require('../utils/auth')
 
 const res = {
     Query: {
-        me: async (parent, args, context) => {
-            if (context.user) {
-                const data = await User.findOne({_id: context.user._id}).select('-__v - password').populate('savedBooks')
-                console.log(data)
-                return data
-            }
-            throw new AuthenticationError("you must be signed in")
-        },
+        // me: async (parent, args, context) => {
+        //     if (context.user) {
+        //         const data = await User.findOne({_id: context.user._id}).select('-__v - password').populate('savedBooks')
+        //         console.log(data)
+        //         return data
+        //     }
+        //     throw new AuthenticationError("you must be signed in")
+        // },
         Users: async() => {
             const users = await User.find()
             console.log(users)
@@ -44,7 +44,7 @@ const res = {
             if (context.user) {
                 const updootUser = await User.findOneAndUpdate(
                     {_id: context.user._id},
-                    {$pull: {savedBooks: bookId} }, //$addToSet ?
+                    {$addToSet: {savedBooks: bookId} }, //$addToSet ?
                     {new: true}
                 )
                 return updootUser
