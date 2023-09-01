@@ -32,13 +32,13 @@ const res = {
                 throw new AuthenticationError('No')
             }
             const token = signToken(user)
-            return (token, user)
+            return {token, user}
         },
         addUser: async (parent, args) => {
             console.log("test", args)
             const user = await User.create(args)
             const token = signToken(user)
-            return { token, user }
+            return { user, token}
         },
         addBook: async (parent, {bookData}, context) => {
             if (context.user) {

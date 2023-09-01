@@ -17,16 +17,16 @@ const SignupForm = () => {
     const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
   };
-
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try { const {data } = await addUser({
       variables: {...userFormData}
     })
-  auth.login(data.addUser.token)} catch (err) {
-    console.error(err)
+    auth.login(data.addUser.token)} catch (err) {
+      console.error(err)
   }
     }
+
 // console.log("userFormData", userFormData)
     // check if form has everything (as per react-bootstrap docs)
     // const form = event.currentTarget;
