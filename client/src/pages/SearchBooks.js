@@ -1,6 +1,6 @@
 //add save button
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { SAVE_BOOK } from '../utils/mutation';
 import { useMutation } from '@apollo/client';
@@ -112,6 +112,8 @@ const SearchBooks = () => {
     }
   };
 
+  const linkRef = useRef(null)
+
   return (
     <>
       <div className="text-light bg-dark p-5">
@@ -148,7 +150,7 @@ const SearchBooks = () => {
         <Row>
           {searchedBooks.map((book) => {
             return (
-              <Col md="4">
+              <Col key={book.bookId} md="4">
                 <Card key={book.bookId} border='dark'>
                   {book.image ? (
                     <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' />
@@ -167,7 +169,7 @@ const SearchBooks = () => {
                           : 'Save this Book!'}
                       </Button>
                     )}
-                    <br/> <a target='_blank' ref="noreferrer noopener" id='link' href={book.link}>
+                    <br/> <a target='_blank' rel="noreferrer noopener" id='link' href={book.link} ref={linkRef}>
                       {book.link == null ? "no link" : "google"}
                     </a>
                   </Card.Body>
